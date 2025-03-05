@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:task_manager/authentication/data/services/auth_service.dart';
-import 'package:task_manager/authentication/presentation/style.dart';
+import 'package:task_manager/common/style.dart';
 import 'package:task_manager/authentication/presentation/widgets/textformfield.dart';
 import 'package:task_manager/common/local%20db/hivedb.dart';
 

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../style.dart';
+import '../../../common/style.dart';
 
 Widget buildTextFormField(TextEditingController controller,String label,String hintText){
   return TextFormField(

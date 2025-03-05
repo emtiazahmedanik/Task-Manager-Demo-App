@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_manager/authentication/data/services/auth_service.dart';
-import 'package:task_manager/authentication/presentation/screens/task_home_page.dart';
-import 'package:task_manager/authentication/presentation/style.dart';
+import 'package:task_manager/task-management/presentation/screens/task_home_page.dart';
+import 'package:task_manager/common/style.dart';
 import 'package:task_manager/authentication/presentation/widgets/textformfield.dart';
 import 'package:task_manager/common/local%20db/hivedb.dart';
 
@@ -72,7 +72,7 @@ class _RegistrationPageState extends State<LoginPage> {
                             updateJson();
                             token = await loginUser(json);
                             if(token.isNotEmpty){
-                              HiveDB.storeLogin(token);
+                              HiveDB.storeLoginToken(token);
                               nextRoute();
                             }
 

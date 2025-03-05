@@ -52,9 +52,9 @@ elevatedButtonStyle(){
   );
 }
 
-successToast(){
+successToast(text){
   return Fluttertoast.showToast(
-      msg: "Request Success",
+      msg: "$text",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
@@ -63,9 +63,9 @@ successToast(){
       fontSize: 16.0
   );
 }
-errorToast(){
+errorToast(text){
   return Fluttertoast.showToast(
-      msg: "Request fail",
+      msg: "$text",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,

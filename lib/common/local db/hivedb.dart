@@ -19,11 +19,11 @@ class HiveDB{
     return value;
   }
 
-  static storeLogin(token){
+  static storeLoginToken(token){
     _initializeHive();
     box.put("login", token);
   }
-  static dynamic retrieveLoginFlag(){
+  static dynamic retrieveLoginToken(){
     _initializeHive();
     var value = box.get("login");
     return value;

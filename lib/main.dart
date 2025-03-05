@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:task_manager/authentication/presentation/screens/login.dart';
 import 'package:task_manager/authentication/presentation/screens/registration.dart';
-import 'package:task_manager/authentication/presentation/screens/task_home_page.dart';
+import 'package:task_manager/task-management/presentation/screens/task_home_page.dart';
 import 'package:task_manager/common/local%20db/hivedb.dart';
 
 void main() async{
@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     flagRegister = HiveDB.retrieveRegistrationFlag();
-    flagLogin = HiveDB.retrieveLoginFlag();
+    flagLogin = HiveDB.retrieveLoginToken();
 
   }
 

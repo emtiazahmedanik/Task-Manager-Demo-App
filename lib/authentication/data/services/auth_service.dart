@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:task_manager/authentication/presentation/style.dart';
+import 'package:task_manager/common/style.dart';
 
 final baseUrl = "http://35.73.30.144:2005/api/v1";
 final registrationUri = Uri.parse("$baseUrl/Registration");
@@ -14,10 +14,10 @@ Future<bool> registerUser(fromJson) async{
   final responseCode =response.statusCode;
   final responseBody = jsonDecode(response.body);
   if(responseCode==200 && responseBody["status"]=="success"){
-    successToast();
+    successToast("Registration Successfully");
     return true;
   }else{
-    errorToast();
+    errorToast("Registration Failed");
     return false;
   }
 }
@@ -30,11 +30,11 @@ Future<String> loginUser(fromJson) async{
   final responseBody = jsonDecode(response.body);
   var token = "";
   if(responseCode==200 && responseBody["status"]=="success"){
-    successToast();
+    successToast("Login Successfully");
     token = responseBody["token"];
     return token;
   }else{
-    errorToast();
+    errorToast("Login Failed");
     return token;
   }
 }
