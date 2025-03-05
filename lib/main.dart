@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:task_manager/authentication/presentation/screens/login.dart';
 import 'package:task_manager/authentication/presentation/screens/registration.dart';
+import 'package:task_manager/authentication/presentation/screens/task_home_page.dart';
 import 'package:task_manager/common/local%20db/hivedb.dart';
 
 void main() async{
@@ -20,13 +21,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  var flag ;
+  var flagRegister ;
+  var flagLogin;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    flag = HiveDB.retrieveRegistrationFlag();
+    flagRegister = HiveDB.retrieveRegistrationFlag();
+    flagLogin = HiveDB.retrieveLoginFlag();
 
   }
 
@@ -39,7 +42,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:flag==null ? (RegistrationPage()) : (flag?LoginPage():RegistrationPage()),
+      home:flagRegister==null ? (RegistrationPage()) : (flagRegister?(flagLogin==null?LoginPage():TaskHomePage()):RegistrationPage()),
     );
   }
 }

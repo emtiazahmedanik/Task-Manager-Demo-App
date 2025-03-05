@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:task_manager/authentication/data/services/auth_service.dart';
+import 'package:task_manager/authentication/presentation/screens/task_home_page.dart';
 import 'package:task_manager/authentication/presentation/style.dart';
 import 'package:task_manager/authentication/presentation/widgets/textformfield.dart';
+import 'package:task_manager/common/local%20db/hivedb.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,7 +16,30 @@ class LoginPage extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 final _emailController = TextEditingController();
 final _passwordController = TextEditingController();
+
+Map<String,String> json = {
+  "email":"",
+  "password":""
+};
+
+updateJson(){
+  json.update("email", (value)=>_emailController.text.toString());
+  json.update("password", (value)=>_passwordController.text.toString());
+}
+
+var token = "";
+
+
+
 class _RegistrationPageState extends State<LoginPage> {
+
+  nextRoute(){
+    setState(() {
+     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>TaskHomePage()));
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +67,14 @@ class _RegistrationPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(10)
                       ),
                       child: ElevatedButton(
-                        onPressed: (){
+                        onPressed: () async{
                           if(_formKey.currentState!.validate()){
+                            updateJson();
+                            token = await loginUser(json);
+                            if(token.isNotEmpty){
+                              HiveDB.storeLogin(token);
+                              nextRoute();
+                            }
 
                           }
                         },

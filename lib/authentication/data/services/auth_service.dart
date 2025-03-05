@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:task_manager/authentication/presentation/style.dart';
 
@@ -18,5 +19,22 @@ Future<bool> registerUser(fromJson) async{
   }else{
     errorToast();
     return false;
+  }
+}
+
+Future<String> loginUser(fromJson) async{
+  final postBody = jsonEncode(fromJson);
+  final postHeader = {"Content-Type":"application/json"};
+  final response = await http.post(loginUri,body: postBody,headers: postHeader);
+  final responseCode = response.statusCode;
+  final responseBody = jsonDecode(response.body);
+  var token = "";
+  if(responseCode==200 && responseBody["status"]=="success"){
+    successToast();
+    token = responseBody["token"];
+    return token;
+  }else{
+    errorToast();
+    return token;
   }
 }

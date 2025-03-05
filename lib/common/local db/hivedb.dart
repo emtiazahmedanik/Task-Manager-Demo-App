@@ -18,4 +18,16 @@ class HiveDB{
     var value = box.get("registration");
     return value;
   }
+
+  static storeLogin(token){
+    _initializeHive();
+    box.put("login", token);
+  }
+  static dynamic retrieveLoginFlag(){
+    _initializeHive();
+    var value = box.get("login");
+    return value;
+  }
 }
+
+
