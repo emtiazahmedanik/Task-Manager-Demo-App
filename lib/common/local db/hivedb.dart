@@ -1,33 +1,32 @@
+
+
 import 'package:hive_ce/hive.dart';
 
-class HiveDB{
-  static var box = Hive.box("storage");
-  static _initializeHive() async{
-    if(!Hive.isBoxOpen("storage")){
+class HiveDB {
+  static late Box box;
+
+  /// Initialize Hive once when the app starts
+  static Future<void> initializeHive() async {
+    if (!Hive.isBoxOpen("storage")) {
       box = await Hive.openBox("storage");
-    }else{
+    } else {
       box = Hive.box("storage");
     }
   }
-  static storeRegistration(){
-    _initializeHive();
+
+  static void storeRegistration() {
     box.put("registration", true);
   }
-  static dynamic retrieveRegistrationFlag(){
-    _initializeHive();
-    var value = box.get("registration");
-    return value;
+
+  static bool retrieveRegistrationFlag() {
+    return box.get("registration", defaultValue: false);
   }
 
-  static storeLoginToken(token){
-    _initializeHive();
+  static void storeLoginToken(String token) {
     box.put("login", token);
   }
-  static dynamic retrieveLoginToken(){
-    _initializeHive();
-    var value = box.get("login");
-    return value;
+
+  static String? retrieveLoginToken() {
+    return box.get("login");
   }
 }
-
-

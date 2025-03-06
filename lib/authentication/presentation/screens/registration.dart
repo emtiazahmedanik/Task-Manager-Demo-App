@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:task_manager/authentication/data/services/auth_service.dart';
+import 'package:task_manager/authentication/presentation/screens/login.dart';
 import 'package:task_manager/common/style.dart';
 import 'package:task_manager/authentication/presentation/widgets/textformfield.dart';
 import 'package:task_manager/common/local%20db/hivedb.dart';
@@ -89,7 +90,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                         style: elevatedButtonStyle(),
                         child: Text("Register",style: GoogleFonts.inter(textStyle: TextStyle(fontSize: 16)),),
+
                       ),
+                    ),
+                    TextButton(
+                        onPressed: (){
+                          HiveDB.storeRegistration();
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                        },
+                        child: Text("Already Registered ? Login",style: GoogleFonts.inter(textStyle: TextStyle(color: Colors.indigoAccent)),)
                     )
                   ],
 

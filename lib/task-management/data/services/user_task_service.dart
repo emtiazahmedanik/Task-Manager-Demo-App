@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 final baseUrl = "http://35.73.30.144:2005/api/v1";
 Uri completedTaskUri = Uri.parse("$baseUrl/listTaskByStatus/Completed");
 Uri newTaskUri = Uri.parse("$baseUrl/listTaskByStatus/New");
+Uri createTaskUri = Uri.parse("$baseUrl/createTask");
+
 var token = HiveDB.retrieveLoginToken();
 
 Future<List> getNewTask() async{
@@ -22,5 +24,18 @@ Future<List> getNewTask() async{
     errorToast("Failed to fetch new task");
     return [];
 
+  }
+}
+Future<void> createNewTaskService(fromJson) async{
+  final postHeader = {"Content-Type":"application/json","token":"$token"};
+  final postBody = jsonEncode(fromJson);
+  final response = await http.post(createTaskUri,headers: postHeader,body: postBody);
+  final responseCode = response.statusCode;
+  final responseBody = jsonDecode(response.body);
+  if(responseCode==200 && responseBody["status"]=="success"){
+    successToast("Task created successfully");
+
+  }else{
+    errorToast("Task creation failed");
   }
 }
