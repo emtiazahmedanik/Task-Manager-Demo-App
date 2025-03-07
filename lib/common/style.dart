@@ -3,6 +3,8 @@ import "package:fluttertoast/fluttertoast.dart";
 import "package:google_fonts/google_fonts.dart";
 
 Color strokeColor = Color.fromRGBO(216, 218, 220, 1);
+Color taskBackgroundColor =  Color.fromRGBO(243, 239, 238, 1);
+Color selectionColor = Color.fromRGBO(159, 159, 159, 1);
 headingTextStyle() {
   return GoogleFonts.poppins(
       textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold));
