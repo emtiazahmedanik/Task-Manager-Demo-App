@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:task_manager/authentication/data/model/profile_detail_model.dart';
 import 'package:task_manager/common/controller/completed_task_controller.dart';
 import 'package:task_manager/common/controller/new_task_controller.dart';
+import 'package:task_manager/common/controller/profile_detail_controller.dart';
 import 'package:task_manager/common/style.dart';
 import 'package:task_manager/task-management/data/services/user_task_service.dart';
 import 'package:task_manager/task-management/presentation/widgets/textformfield.dart';
@@ -12,6 +14,7 @@ class TaskHomePage extends StatelessWidget {
 
   var newTaskController = Get.put(NewTaskController());
   var completedTaskController = Get.put(CompletedTaskController());
+  var profileDetail = Get.put(CallApi());
 
   Map<String, String> json = {"title": "", "description": "", "status": "New"};
 
@@ -37,14 +40,41 @@ class TaskHomePage extends StatelessWidget {
   }
 
   final _formKey = GlobalKey<FormState>();
+  List<User> userDetailList = [];
+  fetchProfileDetail() async{
+    userDetailList = await profileDetail.callApi();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
+    var username = "";
+    var mobile = "";
+    var email = "";
+    if(userDetailList.isNotEmpty){
+      username = "${userDetailList[0].firstName} ${userDetailList[0].lastName}";
+      mobile = userDetailList[0].phone;
+    }
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              CircleAvatar(
+                child: Icon(Icons.person),
+              ),
+              Column(
+                children: [
+                  Text("$username"),
+                  Text("$mobile")
+                ],
+              )
+            ],
+          ),
+        ),
         body: SafeArea(
             child: Column(
               children: [

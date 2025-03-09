@@ -1,11 +1,16 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'package:task_manager/authentication/presentation/screens/login.dart';
 import 'package:task_manager/common/style.dart';
+
+import '../../../common/local db/hivedb.dart';
 
 final baseUrl = "http://35.73.30.144:2005/api/v1";
 final registrationUri = Uri.parse("$baseUrl/Registration");
 final loginUri = Uri.parse("$baseUrl/Login");
+final profileDetailUri = Uri.parse("$baseUrl/ProfileDetails");
+
+var token = HiveDB.retrieveLoginToken();
 
 Future<bool> registerUser(fromJson) async{
   final postBody = jsonEncode(fromJson);
@@ -37,4 +42,17 @@ Future<String> loginUser(fromJson) async{
     errorToast("Login Failed");
     return token;
   }
+}
+
+Future<List> getProfileDetail() async{
+  final getHeader = {"token":"$token"};
+  final response = await http.get(profileDetailUri,headers: getHeader);
+  final responseBody = jsonDecode(response.body);
+  if(response.statusCode==200 && responseBody["status"]=="success"){
+    return responseBody["data"];
+  }else{
+    return [];
+
+  }
+
 }
