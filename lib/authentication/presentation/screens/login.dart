@@ -10,34 +10,44 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _RegistrationPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-final _formKey = GlobalKey<FormState>();
-final _emailController = TextEditingController();
-final _passwordController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-Map<String,String> json = {
-  "email":"",
-  "password":""
-};
+  bool _isLoading = false; // Loading indicator
 
-updateJson(){
-  json.update("email", (value)=>_emailController.text.toString());
-  json.update("password", (value)=>_passwordController.text.toString());
-}
+  Map<String, String> _updateJson() {
+    return {
+      "email": _emailController.text.trim(),
+      "password": _passwordController.text.trim(),
+    };
+  }
 
-var token = "";
+  void _nextRoute() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => TaskHomePage()));
+  }
 
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true); // Show loading
 
+      String token = await loginUser(_updateJson());
+      if (token.isNotEmpty) {
+        await HiveDB.storeLoginToken(token);
+        _nextRoute();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed. Please try again.")),
+        );
+      }
 
-class _RegistrationPageState extends State<LoginPage> {
-
-  nextRoute(){
-    setState(() {
-     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>TaskHomePage()));
-    });
-
+      setState(() => _isLoading = false); // Hide loading
+    }
   }
 
   @override
@@ -45,49 +55,41 @@ class _RegistrationPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  spacing: 12,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 20,),
-                    Text("Login",style: headingTextStyle(),),
-                    SizedBox(height: 30,),
-                    buildTextFormField(_emailController, "Email", "Your Email"),
-                    buildTextFormField(_passwordController, "Password", "Enter password"),
-                    SizedBox(height: 20,),
-                    Container(
-                      height: 56,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () async{
-                          if(_formKey.currentState!.validate()){
-                            updateJson();
-                            token = await loginUser(json);
-                            if(token.isNotEmpty){
-                              HiveDB.storeLoginToken(token);
-                              nextRoute();
-                            }
-
-                          }
-                        },
-                        style: elevatedButtonStyle(),
-                        child: Text("Login",style: GoogleFonts.inter(textStyle: TextStyle(fontSize: 16)),),
-                      ),
-                    )
-                  ],
-
-                ),
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 7,
+                children: [
+                  const SizedBox(height: 20),
+                  Text("Login", style: headingTextStyle()),
+                  const SizedBox(height: 30),
+                  buildTextFormField(_emailController, "Email", "Your Email"),
+                  buildTextFormField(_passwordController, "Password", "Enter password"),
+                  const SizedBox(height: 20),
+                  Container(
+                    height: 56,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _handleLogin, // Disable button when loading
+                      style: elevatedButtonStyle(),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : Text("Login",
+                          style: GoogleFonts.inter(
+                              textStyle: const TextStyle(fontSize: 16))),
+                    ),
+                  )
+                ],
               ),
             ),
-          )
+          ),
+        ),
       ),
     );
   }

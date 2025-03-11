@@ -1,5 +1,3 @@
-
-
 import 'package:hive_ce/hive.dart';
 
 class HiveDB {
@@ -14,19 +12,23 @@ class HiveDB {
     }
   }
 
-  static void storeRegistration() {
-    box.put("registration", true);
+  /// Store registration flag
+  static Future<void> storeRegistration() async {
+    await box.put("registration", true);
   }
 
-  static bool retrieveRegistrationFlag() {
-    return box.get("registration", defaultValue: false);
+  /// Retrieve registration flag asynchronously
+  static Future<bool> retrieveRegistrationFlag() async {
+    return await box.get("registration", defaultValue: false);
   }
 
-  static void storeLoginToken(String token) {
-    box.put("login", token);
+  /// Store login token
+  static Future<void> storeLoginToken(String token) async {
+    await box.put("login", token);
   }
 
-  static String? retrieveLoginToken() {
-    return box.get("login");
+  /// Retrieve login token asynchronously
+  static Future<String?> retrieveLoginToken() async {
+    return await box.get("login");
   }
 }

@@ -1,29 +1,38 @@
 import '../services/auth_service.dart';
+import 'package:flutter/foundation.dart'; // For debugPrint
 
-class User{
+class User {
   final String firstName;
   final String lastName;
   final String email;
   final String phone;
+
   User({
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.phone
-});
+    required this.phone,
+  });
 
+  // ✅ Factory constructor for better object creation
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      email: json["email"] ?? "",
+      firstName: json["firstName"] ?? "",
+      lastName: json["lastName"] ?? "",
+      phone: json["mobile"] ?? "",
+    );
+  }
 }
-class CallApi{
-  Future<List<User>> callApi() async{
-    final data = await getProfileDetail();
-    final transformed = data.map((user){
-      return User(
-          email: user["email"],
-          firstName: user["firstName"],
-          lastName: user["lastName"],
-          phone: user["mobile"]
-      );
-    }).toList();
-    return transformed;
+
+class CallApi {
+  static Future<List<User>> callApi() async {
+    try {
+      final data = await getProfileDetail();
+      return data.map((user) => User.fromJson(user)).toList();
+        } catch (e) {
+      debugPrint("Error fetching user data: $e");
+      return [];
+    }
   }
 }

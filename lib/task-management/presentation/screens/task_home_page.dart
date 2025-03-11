@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_manager/authentication/data/model/profile_detail_model.dart';
+import 'package:task_manager/authentication/presentation/screens/profile_detail_page.dart';
 import 'package:task_manager/common/controller/completed_task_controller.dart';
 import 'package:task_manager/common/controller/new_task_controller.dart';
 import 'package:task_manager/common/controller/profile_detail_controller.dart';
@@ -14,7 +15,7 @@ class TaskHomePage extends StatelessWidget {
 
   var newTaskController = Get.put(NewTaskController());
   var completedTaskController = Get.put(CompletedTaskController());
-  var profileDetail = Get.put(CallApi());
+  var profileDetailController = Get.put(ProfileDetailController());
 
   Map<String, String> json = {"title": "", "description": "", "status": "New"};
 
@@ -27,6 +28,7 @@ class TaskHomePage extends StatelessWidget {
 
   final descriptionController = TextEditingController();
 
+
   clearController() {
     titleController.clear();
     descriptionController.clear();
@@ -34,27 +36,18 @@ class TaskHomePage extends StatelessWidget {
 
   Future<void> _onRefresh() async{
     newTaskController.fetchNewTask();
+
   }
   Future<void> _onRefreshCompleteTask() async{
     completedTaskController.fetchCompletedTask();
   }
 
   final _formKey = GlobalKey<FormState>();
-  List<User> userDetailList = [];
-  fetchProfileDetail() async{
-    userDetailList = await profileDetail.callApi();
-  }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
-    var username = "";
-    var mobile = "";
-    var email = "";
-    if(userDetailList.isNotEmpty){
-      username = "${userDetailList[0].firstName} ${userDetailList[0].lastName}";
-      mobile = userDetailList[0].phone;
-    }
+
 
     return DefaultTabController(
       length: 2,
@@ -62,14 +55,26 @@ class TaskHomePage extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Row(
+            spacing: 5,
             children: [
-              CircleAvatar(
-                child: Icon(Icons.person),
+              InkWell(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileDetailPage()));
+                },
+                child: CircleAvatar(
+                  child: Icon(Icons.person),
+                ),
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("$username"),
-                  Text("$mobile")
+                  Obx(
+                      ()=>
+                          profileDetailController.userDetailList.isEmpty?Text("",style: profileTextStyle(),): Text("${profileDetailController.userDetailList[0].firstName} ",style: profileTextStyle(), )
+                  ),
+                  Obx(()=>
+                  profileDetailController.userDetailList.isEmpty?Text("",style: profileTextStyle()): Text("${profileDetailController.userDetailList[0].email}",style: profileTextStyle() )
+                  )
                 ],
               )
             ],

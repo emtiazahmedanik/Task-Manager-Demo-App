@@ -10,6 +10,10 @@ headingTextStyle() {
       textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold));
 }
 
+profileTextStyle(){
+  return TextStyle(fontSize: 13,fontWeight: FontWeight.w500);
+}
+
 labelTextStyle() {
   return TextStyle(
     color: Colors.black,

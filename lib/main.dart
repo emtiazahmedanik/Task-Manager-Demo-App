@@ -23,16 +23,24 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  var flagRegister ;
-  var flagLogin;
+  bool? flagRegister;
+  String? flagLogin;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    flagRegister = HiveDB.retrieveRegistrationFlag();
-    flagLogin = HiveDB.retrieveLoginToken();
+    _initializeFlags();
+  }
 
+  Future<void> _initializeFlags() async {
+    var registerFlag = await HiveDB.retrieveRegistrationFlag();
+    var loginFlag = await HiveDB.retrieveLoginToken();
+
+    setState(() {
+      flagRegister = registerFlag;
+      flagLogin = loginFlag;
+    });
   }
 
   // This widget is the root of your application.
@@ -44,7 +52,11 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:flagRegister==null ? (RegistrationPage()) : (flagRegister?(flagLogin==null?LoginPage():TaskHomePage()):RegistrationPage()),
+      home: flagRegister == null
+          ? const Center(child: CircularProgressIndicator()) // Prevents null errors
+          : (flagRegister!
+          ? (flagLogin == null ? LoginPage() : TaskHomePage())
+          : RegistrationPage()),
     );
   }
 }
